@@ -1,0 +1,140 @@
+<!DOCTYPE html>
+<html lang="en"><head><meta charset="utf-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Holdfast — Fixed asset register</title>
+<link rel="icon" href="data:image/svg+xml,<svg xmlns=%22http://www.w3.org/2000/svg%22 viewBox=%220 0 10 10%22><text y=%22.9em%22 font-size=%228%22>⚓</text></svg>">
+<link href="https://fonts.googleapis.com/css2?family=Bricolage+Grotesque:wght@500;700&family=Figtree:wght@400;500;600&display=swap" rel="stylesheet">
+<style>
+:root{--bg:#f3f5f4;--card:#fff;--ink:#12262b;--mute:#5d7077;--line:#dde4e2;--rail:#0f2a30;--rail-t:#a9c2c0;--acc:#0c7a72;--acc-s:#d9efec;--amb:#c98516;--amb-s:#f8ecd2;--red:#b4402e;--grn:#2b7a4b;box-sizing:border-box;padding-top:env(safe-area-inset-top,0px);padding-bottom:env(safe-area-inset-bottom,0px)}
+@media(prefers-color-scheme:dark){:root:not([data-theme=light]){--bg:#0b1517;--card:#121f22;--ink:#e6efee;--mute:#8fa5a7;--line:#23363a;--rail:#081012;--acc:#3fc1b6;--acc-s:#14393a;--amb:#e5a63a;--amb-s:#3a2d12;--red:#e5806e;--grn:#6fcf95}}
+:root[data-theme=dark]{--bg:#0b1517;--card:#121f22;--ink:#e6efee;--mute:#8fa5a7;--line:#23363a;--rail:#081012;--acc:#3fc1b6;--acc-s:#14393a;--amb:#e5a63a;--amb-s:#3a2d12;--red:#e5806e;--grn:#6fcf95}
+*{box-sizing:border-box}html,body{margin:0}
+body{background:var(--bg);color:var(--ink);font:14px/1.5 Figtree,system-ui,sans-serif;display:flex;min-height:100vh}
+h1,h2,h3,.num{font-family:'Bricolage Grotesque',Figtree,sans-serif;margin:0;letter-spacing:-.01em}
+nav{width:216px;background:var(--rail);color:var(--rail-t);padding:22px 12px;position:sticky;top:0;height:100vh;flex:none;display:flex;flex-direction:column;gap:2px}
+.brand{font:700 22px 'Bricolage Grotesque',sans-serif;color:#fff;padding:0 10px 18px}
+.brand small{display:block;font:400 12px Figtree,sans-serif;color:var(--rail-t)}
+nav button{all:unset;cursor:pointer;padding:8px 12px;border-radius:7px;color:var(--rail-t)}
+nav button:hover{background:#ffffff14}nav button.on{background:#ffffff1f;color:#fff;font-weight:600}
+nav hr{border:0;border-top:1px solid #ffffff1a;margin:10px 4px;width:calc(100% - 8px)}
+main{flex:1;min-width:0;padding:26px 32px 60px;max-width:1180px}
+header.top{display:flex;justify-content:space-between;align-items:flex-end;gap:12px;flex-wrap:wrap;margin-bottom:20px}
+header.top h1{font-size:28px}header.top p{margin:2px 0 0;color:var(--mute)}
+.row{display:flex;gap:8px;flex-wrap:wrap;align-items:center}
+button.b,select,input,textarea{font:inherit;color:var(--ink);background:var(--card);border:1px solid var(--line);border-radius:8px;padding:7px 11px}
+button.b{cursor:pointer;font-weight:500}button.b:hover{border-color:var(--acc)}
+button.p{background:var(--acc);border-color:var(--acc);color:#fff}:root:not([data-theme=light]) button.p{color:#06201e}
+button.d{color:var(--red)}
+:focus-visible{outline:2px solid var(--acc);outline-offset:2px}
+.card{background:var(--card);border:1px solid var(--line);border-radius:12px;padding:18px}
+.grid{display:grid;gap:14px}.g4{grid-template-columns:repeat(4,1fr)}.g2{grid-template-columns:1.4fr 1fr}.g2e{grid-template-columns:1fr 1fr}
+.k{color:var(--mute);font-size:13px}.kv{font:700 26px 'Bricolage Grotesque',sans-serif;margin-top:2px}
+.ledger{margin-bottom:14px}.ledger .bar{display:flex;height:46px;border-radius:8px;overflow:hidden;margin:14px 0 10px;background:var(--line)}
+.ledger .bar i{display:block;height:100%}.ledger .big{font:700 40px 'Bricolage Grotesque',sans-serif}
+.lg{display:flex;gap:18px;flex-wrap:wrap;color:var(--mute);font-size:13px}.lg b{color:var(--ink)}
+.dot{display:inline-block;width:10px;height:10px;border-radius:3px;margin-right:6px}
+.tw{overflow-x:auto}table{border-collapse:collapse;width:100%;min-width:560px}
+th{text-align:left;font-weight:600;color:var(--mute);font-size:12.5px;padding:8px 10px;border-bottom:1px solid var(--line);white-space:nowrap}
+td{padding:9px 10px;border-bottom:1px solid var(--line)}td.r,th.r{text-align:right;font-variant-numeric:tabular-nums}
+tr:last-child td{border-bottom:0}tfoot td{font-weight:600;border-top:2px solid var(--line)}
+.tag{padding:2px 9px;border-radius:99px;font-size:12px;font-weight:500;background:var(--acc-s);color:var(--acc)}
+.tag.Disposed{background:var(--line);color:var(--mute)}.tag.Idle,.tag.Scheduled{background:var(--amb-s);color:var(--amb)}.tag.UM{background:var(--amb-s);color:var(--amb)}
+.hb{display:grid;grid-template-columns:130px 1fr 90px;gap:10px;align-items:center;margin:9px 0;font-size:13px}
+.hb div.t{height:12px;background:var(--line);border-radius:6px;overflow:hidden}.hb div.t i{display:block;height:100%;background:var(--acc);border-radius:6px}
+.trend{display:flex;align-items:flex-end;gap:16px;height:150px;padding-top:8px}.trend div{flex:1;display:flex;flex-direction:column;align-items:center;gap:6px;height:100%;justify-content:flex-end}
+.trend span.p{display:flex;align-items:flex-end;gap:4px;height:100%;width:100%;justify-content:center}.trend span.p i{width:42%;max-width:26px;border-radius:4px 4px 0 0}
+.empty{text-align:center;color:var(--mute);padding:28px}
+dialog{border:1px solid var(--line);border-radius:14px;background:var(--card);color:var(--ink);padding:22px;width:min(520px,94vw)}dialog::backdrop{background:#0008}
+dialog form{display:grid;grid-template-columns:1fr 1fr;gap:10px}dialog label{display:grid;gap:3px;font-size:13px;color:var(--mute)}dialog .w{grid-column:1/-1}dialog .row{grid-column:1/-1;justify-content:flex-end}
+.note{color:var(--mute);font-size:12.5px;margin-top:10px}
+@media(max-width:860px){body{flex-direction:column}nav{width:100%;height:auto;position:static;flex-direction:row;overflow-x:auto;padding:10px;align-items:center}.brand{padding:0 10px 0 4px;white-space:nowrap}.brand small,nav hr{display:none}nav button{white-space:nowrap}main{padding:18px 14px 50px}.g4{grid-template-columns:1fr 1fr}.g2,.g2e{grid-template-columns:1fr}.hb{grid-template-columns:100px 1fr 78px}}
+@media print{nav,.row,header.top .row{display:none}body{display:block}}
+</style></head><body>
+<nav id="nav"></nav><main id="main"></main>
+<dialog id="dlg"></dialog>
+<script>
+const $=s=>document.querySelector(s);
+const CATS={'Plant & machinery':[15,15],'Furniture & fixtures':[10,10],'Office equipment':[5,15],'Computers':[3,40],'Vehicles':[8,15],'Buildings':[30,10],'Land':[0,0],'Intangibles':[10,25]};
+const seed=()=>({s:{co:'Your company name',fy:2025,tax:25.17,res:5},
+assets:[
+{id:'HF-001',name:'CNC lathe, Unit 1',cat:'Plant & machinery',date:'2022-06-14',cost:1850000,life:15,method:'SLM',res:5,tr:15,loc:'Peenya plant',st:'Active'},
+{id:'HF-002',name:'Dell servers (3)',cat:'Computers',date:'2023-09-02',cost:640000,life:3,method:'SLM',res:5,tr:40,loc:'Head office',st:'Active'},
+{id:'HF-003',name:'Delivery van, Tata Ace',cat:'Vehicles',date:'2024-01-20',cost:720000,life:8,method:'WDV',res:5,tr:15,loc:'Warehouse',st:'Under Maintenance'},
+{id:'HF-004',name:'Workstation furniture',cat:'Furniture & fixtures',date:'2025-05-11',cost:310000,life:10,method:'SLM',res:5,tr:10,loc:'Head office',st:'Active'},
+{id:'HF-005',name:'Office building, Whitefield',cat:'Buildings',date:'2019-04-01',cost:9200000,life:30,method:'SLM',res:5,tr:10,loc:'Whitefield',st:'Active'},
+{id:'HF-006',name:'Laser printer',cat:'Office equipment',date:'2021-02-10',cost:85000,life:5,method:'SLM',res:5,tr:15,loc:'Head office',st:'Idle'},
+{id:'HF-007',name:'ERP licence',cat:'Intangibles',date:'2024-08-01',cost:480000,life:5,method:'SLM',res:0,tr:25,loc:'—',st:'Active'}],
+maint:[{d:'2026-01-12',a:'HF-003',t:'Breakdown',desc:'Clutch plate replacement',c:18500,st:'Done'},{d:'2026-12-05',a:'HF-001',t:'Preventive',desc:'Spindle alignment and oil change',c:12000,st:'Scheduled'}],
+disp:[]});
+let D;try{D=JSON.parse(localStorage.getItem('hf1'))}catch(e){}if(!D||!D.assets)D=seed();
+const save=()=>{try{localStorage.setItem('hf1',JSON.stringify(D))}catch(e){}};
+let view='Dashboard',q='',fc='',fs='';
+const inr=n=>'₹'+Math.round(n).toLocaleString('en-IN');
+const lakh=n=>n>=1e7?'₹'+(n/1e7).toFixed(2)+' Cr':n>=1e5?'₹'+(n/1e5).toFixed(2)+' L':inr(n);
+const esc=s=>String(s??'').replace(/[&<>"]/g,c=>({'&':'&amp;','<':'&lt;','>':'&gt;','"':'&quot;'}[c]));
+const dt=s=>new Date(s+'T00:00:00');const fyOf=s=>{const d=dt(s);return d.getMonth()>=3?d.getFullYear():d.getFullYear()-1};
+const fyl=y=>`FY ${y}-${String(y+1).slice(2)}`;
+function dispOf(a){return D.disp.find(x=>x.a===a.id)}
+function calc(a,fy,type){let open=a.cost,acc=0,cy=0;const dp=dispOf(a),last=dp?Math.min(fy,fyOf(dp.d)):fy;
+ for(let y=fyOf(a.date);y<=last;y++){const st=new Date(y,3,1),en=new Date(y+1,2,31),from=dt(a.date)>st?dt(a.date):st;const days=Math.round((en-from)/864e5)+1,first=y===fyOf(a.date);let d=0;
+  if(a.cat!=='Land'){if(type==='book'){const floor=a.cost*a.res/100;if(a.method==='SLM')d=(a.cost-floor)/a.life*(first?days/365:1);else d=open*(1-Math.pow(Math.max(a.res,1)/100,1/a.life))*(first?days/365:1);d=Math.max(0,Math.min(d,open-floor))}
+  else{d=open*a.tr/100*(first&&days<180?.5:1)}}
+  if(y===last)cy=d;acc+=d;open-=d}
+ return{cy,acc,nbv:open}}
+const live=()=>D.assets.filter(a=>{const p=dispOf(a);return !p||fyOf(p.d)>=D.s.fy});
+const sum=(arr,f)=>arr.reduce((t,x)=>t+f(x),0);
+const pages={Dashboard(){const L=live();const gb=sum(L,a=>a.cost),ad=sum(L,a=>calc(a,D.s.fy,'book').acc),nb=gb-ad;
+ const by={};L.forEach(a=>by[a.cat]=(by[a.cat]||0)+a.cost);const mx=Math.max(1,...Object.values(by));
+ const next=D.maint.filter(m=>m.st==='Scheduled').sort((a,b)=>a.d<b.d?-1:1);
+ const yrs=[0,1,2,3,4].map(i=>{const y=D.s.fy+i;return{y,b:sum(L,a=>calc(a,y,'book').cy),t:sum(L,a=>calc(a,y,'tax').cy)}});const ym=Math.max(1,...yrs.flatMap(x=>[x.b,x.t]));
+ return `<div class="card ledger"><div class="k">Net block at 31 March ${D.s.fy+1}</div><div class="big">${inr(nb)}</div>
+ <div class="bar"><i style="width:${gb?nb/gb*100:0}%;background:var(--acc)"></i><i style="width:${gb?ad/gb*100:0}%;background:var(--amb)"></i></div>
+ <div class="lg"><span><span class="dot" style="background:var(--acc)"></span>Net block <b>${lakh(nb)}</b></span><span><span class="dot" style="background:var(--amb)"></span>Accumulated depreciation <b>${lakh(ad)}</b></span><span>Gross block <b>${lakh(gb)}</b></span></div></div>
+ <div class="grid g4" style="margin-bottom:14px">${[['Assets in register',L.length],['Depreciation this year (book)',lakh(sum(L,a=>calc(a,D.s.fy,'book').cy))],['Depreciation this year (tax)',lakh(sum(L,a=>calc(a,D.s.fy,'tax').cy))],['Under maintenance or idle',L.filter(a=>a.st==='Under Maintenance'||a.st==='Idle').length]].map(([k,v])=>`<div class="card"><div class="k">${k}</div><div class="kv">${v}</div></div>`).join('')}</div>
+ <div class="grid g2"><div class="card"><h3>Gross block by category</h3>${Object.entries(by).sort((a,b)=>b[1]-a[1]).map(([c,v])=>`<div class="hb"><span>${c}</span><div class="t"><i style="width:${v/mx*100}%"></i></div><span class="num" style="text-align:right">${lakh(v)}</span></div>`).join('')||'<div class="empty">Add your first asset to see the split.</div>'}</div>
+ <div class="card"><h3>Next maintenance</h3>${next.length?next.slice(0,4).map(m=>`<p style="margin:10px 0 0"><b>${esc(m.desc)}</b><br><span class="k">${m.d} · ${esc(m.a)}</span></p>`).join(''):'<div class="empty">Nothing scheduled.</div>'}</div></div>
+ <div class="card" style="margin-top:14px"><h3>Depreciation outlook</h3><div class="trend">${yrs.map(x=>`<div><span class="p"><i title="Book" style="height:${x.b/ym*100}%;background:var(--acc)"></i><i title="Tax" style="height:${x.t/ym*100}%;background:var(--amb)"></i></span><span class="k">${fyl(x.y).slice(3)}</span></div>`).join('')}</div>
+ <div class="lg" style="margin-top:8px"><span><span class="dot" style="background:var(--acc)"></span>Companies Act</span><span><span class="dot" style="background:var(--amb)"></span>Income Tax Act</span><span>Projected on current assets, no additions</span></div></div>`},
+Register(){const rows=D.assets.filter(a=>(!fc||a.cat===fc)&&(!fs||a.st===fs)&&(a.name+a.id+a.loc).toLowerCase().includes(q.toLowerCase()));
+ return `<div class="row" style="margin-bottom:12px"><input id="q" placeholder="Search name, ID or location" value="${esc(q)}" style="flex:1;min-width:180px"><select id="fc"><option value="">All categories</option>${Object.keys(CATS).map(c=>`<option ${c===fc?'selected':''}>${c}</option>`).join('')}</select><select id="fs"><option value="">All statuses</option>${['Active','Under Maintenance','Idle','Disposed'].map(c=>`<option ${c===fs?'selected':''}>${c}</option>`).join('')}</select></div>
+ <div class="card tw"><table><thead><tr><th>ID</th><th>Asset</th><th>Category</th><th class="r">Cost</th><th class="r">Net book value</th><th>Location</th><th>Status</th><th></th></tr></thead><tbody>${rows.map(a=>`<tr><td>${esc(a.id)}</td><td><b>${esc(a.name)}</b><br><span class="k">${a.date}</span></td><td>${a.cat}</td><td class="r">${inr(a.cost)}</td><td class="r">${inr(calc(a,D.s.fy,'book').nbv)}</td><td>${esc(a.loc)}</td><td><span class="tag ${a.st==='Under Maintenance'?'UM':a.st}">${a.st}</span></td><td><button class="b d" data-del="${a.id}">Remove</button></td></tr>`).join('')||'<tr><td colspan="8" class="empty">No assets match. Add one or import a CSV.</td></tr>'}</tbody></table></div>`},
+Depreciation(){const L=live(),B=sum(L,a=>calc(a,D.s.fy,'book').cy),T=sum(L,a=>calc(a,D.s.fy,'tax').cy);
+ return `<div class="grid g2e" style="margin-bottom:14px"><div class="card"><div class="k">Companies Act (Schedule II)</div><div class="kv">${inr(B)}</div><div class="k">Useful-life based, SLM or WDV</div></div><div class="card"><div class="k">Income Tax Act</div><div class="kv">${inr(T)}</div><div class="k">Block rates, WDV, half rate under 180 days</div></div></div>
+ <div class="card tw"><table><thead><tr><th>Asset</th><th class="r">Cost</th><th>Method</th><th class="r">Life</th><th class="r">Book dep.</th><th class="r">Tax dep.</th><th class="r">Net book value</th></tr></thead><tbody>${L.map(a=>`<tr><td>${esc(a.name)}</td><td class="r">${inr(a.cost)}</td><td>${a.method}</td><td class="r">${a.life} yrs</td><td class="r">${inr(calc(a,D.s.fy,'book').cy)}</td><td class="r">${inr(calc(a,D.s.fy,'tax').cy)}</td><td class="r">${inr(calc(a,D.s.fy,'book').nbv)}</td></tr>`).join('')||'<tr><td colspan="7" class="empty">No assets yet.</td></tr>'}</tbody></table></div>`},
+Maintenance(){return `<div class="row" style="margin-bottom:12px"><button class="b p" data-dlg="maint">Log maintenance</button></div><div class="card tw"><table><thead><tr><th>Date</th><th>Asset</th><th>Type</th><th>Work done</th><th class="r">Cost</th><th>Status</th></tr></thead><tbody>${[...D.maint].sort((a,b)=>a.d<b.d?1:-1).map(m=>`<tr><td>${m.d}</td><td>${esc(m.a)}</td><td>${m.t}</td><td>${esc(m.desc)}</td><td class="r">${inr(m.c)}</td><td><span class="tag ${m.st}">${m.st}</span></td></tr>`).join('')||'<tr><td colspan="6" class="empty">No maintenance logged yet.</td></tr>'}</tbody></table></div>`},
+Disposals(){return `<div class="row" style="margin-bottom:12px"><button class="b p" data-dlg="disp">Record disposal</button></div><div class="card tw"><table><thead><tr><th>Date</th><th>Asset</th><th>Type</th><th class="r">Proceeds</th><th class="r">Book value</th><th class="r">Gain or (loss)</th></tr></thead><tbody>${D.disp.map(p=>`<tr><td>${p.d}</td><td>${esc(p.name)}</td><td>${p.t}</td><td class="r">${inr(p.v)}</td><td class="r">${inr(p.bv)}</td><td class="r" style="color:var(${p.v-p.bv>=0?'--grn':'--red'})">${p.v-p.bv>=0?inr(p.v-p.bv):'('+inr(p.bv-p.v)+')'}</td></tr>`).join('')||'<tr><td colspan="6" class="empty">No disposals recorded.</td></tr>'}</tbody></table></div>`},
+'Schedule III'(){const L=live();const rows=Object.keys(CATS).map(c=>{const x=L.filter(a=>a.cat===c);return[c,sum(x,a=>a.cost),sum(x,a=>calc(a,D.s.fy,'book').acc)]}).filter(r=>r[1]);const g=sum(rows,r=>r[1]),d=sum(rows,r=>r[2]);
+ return `<div class="row" style="margin-bottom:12px"><button class="b" onclick="print()">Print or save as PDF</button></div><div class="card tw"><h3>${esc(D.s.co)}</h3><p class="k">Property, plant and equipment as at 31 March ${D.s.fy+1}, per Schedule III, Companies Act 2013</p><table><thead><tr><th>Particulars</th><th class="r">Gross block</th><th class="r">Accumulated depreciation</th><th class="r">Net block</th></tr></thead><tbody>${rows.map(r=>`<tr><td>${r[0]}</td><td class="r">${inr(r[1])}</td><td class="r">${inr(r[2])}</td><td class="r">${inr(r[1]-r[2])}</td></tr>`).join('')||'<tr><td colspan="4" class="empty">No assets to report.</td></tr>'}</tbody><tfoot><tr><td>Total</td><td class="r">${inr(g)}</td><td class="r">${inr(d)}</td><td class="r">${inr(g-d)}</td></tr></tfoot></table></div>`},
+'Book vs tax'(){const L=live(),r=D.s.tax/100;const rows=L.map(a=>{const b=calc(a,D.s.fy,'book').cy,t=calc(a,D.s.fy,'tax').cy;return[a.name,b,t]});const tb=sum(rows,x=>x[1]),tt=sum(rows,x=>x[2]);
+ const nbB=sum(L,a=>calc(a,D.s.fy,'book').nbv),nbT=sum(L,a=>calc(a,D.s.fy,'tax').nbv),dtl=(nbB-nbT)*r;
+ return `<div class="grid g2e" style="margin-bottom:14px"><div class="card"><div class="k">Deferred tax liability on closing difference</div><div class="kv">${inr(dtl)}</div><div class="k">(Book WDV − tax WDV) × ${D.s.tax}%. Illustrative, set the rate in Settings.</div></div><div class="card"><div class="k">Current-year deferred tax charge</div><div class="kv">${inr((tt-tb)*r)}</div><div class="k">(Tax dep. − book dep.) × ${D.s.tax}%</div></div></div>
+ <div class="card tw"><table><thead><tr><th>Asset</th><th class="r">Book dep.</th><th class="r">Tax dep.</th><th class="r">Difference</th><th class="r">Deferred tax</th></tr></thead><tbody>${rows.map(x=>`<tr><td>${esc(x[0])}</td><td class="r">${inr(x[1])}</td><td class="r">${inr(x[2])}</td><td class="r">${inr(x[2]-x[1])}</td><td class="r">${inr((x[2]-x[1])*r)}</td></tr>`).join('')||'<tr><td colspan="5" class="empty">No assets yet.</td></tr>'}</tbody><tfoot><tr><td>Total</td><td class="r">${inr(tb)}</td><td class="r">${inr(tt)}</td><td class="r">${inr(tt-tb)}</td><td class="r">${inr((tt-tb)*r)}</td></tr></tfoot></table></div>
+ <p class="note">Tax depreciation here is asset-wise for simplicity. Income Tax Act depreciation is computed on blocks, so confirm against your return.</p>`},
+Settings(){const s=D.s;return `<div class="card" style="max-width:520px"><form id="sf" class="grid" style="gap:12px"><label class="k">Company name<input name="co" value="${esc(s.co)}" style="width:100%"></label><label class="k">Financial year<select name="fy" style="width:100%">${[2024,2025,2026,2027].map(y=>`<option value="${y}" ${y===s.fy?'selected':''}>${fyl(y)}</option>`).join('')}</select></label><label class="k">Tax rate for deferred tax (%)<input name="tax" type="number" step="0.01" value="${s.tax}" style="width:100%"></label><label class="k">Default residual value (%)<input name="res" type="number" value="${s.res}" style="width:100%"></label><div class="row"><button class="b p">Save settings</button><button type="button" class="b" id="th">Switch theme</button></div></form>
+ <hr style="border:0;border-top:1px solid var(--line);margin:18px 0"><div class="row"><label class="b" style="cursor:pointer">Import assets from CSV<input id="imp" type="file" accept=".csv" hidden></label><button class="b d" id="rs">Reset to sample data</button></div><p class="note">CSV columns: name, cost required. Optional: category, date, life, method, residual, location.</p></div>`}};
+const NAV=['Dashboard','Register','Depreciation','Maintenance','Disposals','|','Schedule III','Book vs tax','|','Settings'];
+const SUB={Dashboard:'Where your fixed assets stand today.',Register:'Every asset, with its current book value.',Depreciation:'Companies Act and Income Tax Act, side by side.',Maintenance:'Service history and what is due.',Disposals:'Sales, scrap and write-offs.','Schedule III':'Ready to print for your financial statements.','Book vs tax':'The gap that drives deferred tax.',Settings:'Company details, year and tax rate.'};
+function render(){$('#nav').innerHTML=`<div class="brand">Holdfast<small>Fixed asset register</small></div>`+NAV.map(n=>n==='|'?'<hr>':`<button class="${n===view?'on':''}" data-v="${n}">${n}</button>`).join('');
+ $('#main').innerHTML=`<header class="top"><div><h1>${view}</h1><p>${SUB[view]} ${fyl(D.s.fy)}.</p></div><div class="row"><button class="b p" data-dlg="asset">Add asset</button></div></header>`+pages[view]();bind()}
+function bind(){document.querySelectorAll('[data-v]').forEach(b=>b.onclick=()=>{view=b.dataset.v;render()});
+ document.querySelectorAll('[data-dlg]').forEach(b=>b.onclick=()=>open(b.dataset.dlg));
+ document.querySelectorAll('[data-del]').forEach(b=>b.onclick=()=>{if(confirm('Remove this asset from the register?')){D.assets=D.assets.filter(a=>a.id!==b.dataset.del);save();render()}});
+ const f=(id,fn)=>{const e=$(id);if(e)e.oninput=fn};f('#q',e=>{q=e.target.value;render();const i=$('#q');i.focus();i.setSelectionRange(q.length,q.length)});f('#fc',e=>{fc=e.target.value;render()});f('#fs',e=>{fs=e.target.value;render()});
+ const sf=$('#sf');if(sf){sf.onsubmit=e=>{e.preventDefault();const v=Object.fromEntries(new FormData(sf));D.s={co:v.co,fy:+v.fy,tax:+v.tax,res:+v.res};save();render()};$('#th').onclick=()=>{const r=document.documentElement;const dk=r.dataset.theme?r.dataset.theme==='dark':matchMedia('(prefers-color-scheme:dark)').matches;r.dataset.theme=dk?'light':'dark'};
+  $('#rs').onclick=()=>{if(confirm('Replace all data with the sample set?')){D=seed();save();render()}};
+  $('#imp').onchange=e=>{const fr=new FileReader();fr.onload=()=>{const ls=fr.result.trim().split(/\r?\n/),h=ls.shift().split(',').map(x=>x.trim().toLowerCase());let n=0;ls.forEach(l=>{const c=l.split(','),o={};h.forEach((k,i)=>o[k]=(c[i]||'').trim());if(!o.name||!+o.cost)return;const cat=CATS[o.category]?o.category:'Office equipment';D.assets.push({id:nid(),name:o.name,cat,date:o.date||new Date().toISOString().slice(0,10),cost:+o.cost,life:+o.life||CATS[cat][0],method:o.method==='WDV'?'WDV':'SLM',res:o.residual?+o.residual:D.s.res,tr:CATS[cat][1],loc:o.location||'—',st:'Active'});n++});save();render();alert(n+' assets imported.')};fr.readAsText(e.target.files[0])}}}
+const nid=()=>'HF-'+String(Math.max(0,...D.assets.map(a=>+a.id.slice(3)||0))+1).padStart(3,'0');
+const opts=a=>a.map(x=>`<option value="${esc(x[0])}">${esc(x[1])}</option>`).join('');
+function open(k){const d=$('#dlg'),A=opts(D.assets.map(a=>[a.id,a.id+' · '+a.name])),today=new Date().toISOString().slice(0,10);
+ const F={asset:`<h3 class="w" style="grid-column:1/-1">Add asset</h3><label class="w">Asset name<input name="name" required></label><label>Category<select name="cat">${Object.keys(CATS).map(c=>`<option>${c}</option>`).join('')}</select></label><label>Purchase date<input type="date" name="date" value="${today}" required></label><label>Cost (₹)<input type="number" name="cost" min="1" required></label><label>Useful life (years)<input type="number" name="life" value="5" min="1"></label><label>Book method<select name="method"><option value="SLM">Straight line</option><option value="WDV">Written down value</option></select></label><label>Residual value (%)<input type="number" name="res" value="${D.s.res}"></label><label>Tax rate (%)<input type="number" name="tr" value="15"></label><label>Location<input name="loc"></label>`,
+ maint:`<h3 style="grid-column:1/-1">Log maintenance</h3><label class="w">Asset<select name="a">${A}</select></label><label>Type<select name="t"><option>Preventive</option><option>Breakdown</option><option>Inspection</option></select></label><label>Status<select name="st"><option>Done</option><option>Scheduled</option></select></label><label>Date<input type="date" name="d" value="${today}"></label><label>Cost (₹)<input type="number" name="c" value="0"></label><label class="w">Work done<input name="desc" required></label>`,
+ disp:`<h3 style="grid-column:1/-1">Record disposal</h3><label class="w">Asset<select name="a">${opts(D.assets.filter(a=>!dispOf(a)).map(a=>[a.id,a.id+' · '+a.name]))}</select></label><label>Type<select name="t"><option>Sale</option><option>Scrap</option><option>Write-off</option><option>Donation</option></select></label><label>Date<input type="date" name="d" value="${today}"></label><label class="w">Proceeds (₹)<input type="number" name="v" value="0"></label>`};
+ if(k==='disp'&&!D.assets.some(a=>!dispOf(a))){alert('Every asset has already been disposed.');return}
+ d.innerHTML=`<form method="dialog" id="df">${F[k]}<div class="row"><button type="button" class="b" id="cx">Cancel</button><button class="b p" id="ok">Save</button></div></form>`;d.showModal();$('#cx').onclick=()=>d.close();
+ $('#df').onsubmit=e=>{e.preventDefault();const v=Object.fromEntries(new FormData(e.target));
+  if(k==='asset'){D.assets.push({id:nid(),name:v.name,cat:v.cat,date:v.date,cost:+v.cost,life:Math.max(1,+v.life||CATS[v.cat][0]),method:v.method,res:+v.res,tr:+v.tr,loc:v.loc||'—',st:'Active'})}
+  if(k==='maint'){D.maint.push({d:v.d,a:v.a,t:v.t,desc:v.desc,c:+v.c,st:v.st});const a=D.assets.find(x=>x.id===v.a);if(v.t==='Breakdown'&&v.st==='Scheduled')a.st='Under Maintenance'}
+  if(k==='disp'){const a=D.assets.find(x=>x.id===v.a);const bv=calc(a,fyOf(v.d),'book').nbv;D.disp.push({a:a.id,name:a.name,d:v.d,t:v.t,v:+v.v,bv});a.st='Disposed'}
+  save();d.close();render()}}
+render();
+</script></body></html>
